@@ -1,4 +1,5 @@
 <div class="column is-half">
+  <% if user_signed_in? %>
   <article class="media-box">
     <figure class="media-left">
       <p class="image is-64x64">  
@@ -10,6 +11,7 @@
       <%= render 'tweets/form' %>
     </div>
   </article>
+  <% end %>
 
 
 <% @tweets.each do | tweet | %>
@@ -22,27 +24,31 @@
       </div>
       <div class="media-content">
         <div class="content">
-          <strong>Ben Mikkelson</strong><br/>
-          <small>@scrymarket</small><br/>
+          <strong><%= tweet.user.name %></strong><br/>
+          <small><%= tweet.user.username %></small><br/>
           <p><%= tweet.tweet %></p>
         </div>
-        <nav class="level">
-          <div class="level-left is-mobile">
-            <%= link_to tweet, class: "level-item" do %>
-              <span class="icon"><i class="fa fa-link" aria-hidden="true"></i></span>
-            <% end %>
+        <% if user_signed_in? %>
+          <nav class="level">
+            <div class="level-left is-mobile">
+              <%= link_to tweet, class: "level-item" do %>
+                <span class="icon"><i class="fa fa-link" aria-hidden="true"></i></span>
+              <% end %>
 
-            <%= link_to edit_tweet_path(tweet), class: "level-item" do %>
-              <span class="icon"><i class="fa fa-pencil" aria-hidden="true"></i></span>
-            <% end %>
+              <% if tweet.user_id == current_user.id %>
+                <%= link_to edit_tweet_path(tweet), class: "level-item" do %>
+                  <span class="icon"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                <% end %>
 
-            <%= link_to tweet, method: :delete, data: { confirm: 'Are you sure?' } do %>
-              <span class="icon"><i class="fa fa-trash" aria-hidden="true"></i></span>
-            <% end %>
+                <%= link_to tweet, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                  <span class="icon"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                <% end %>
+              <% end %>
 
+            </div>
+          </nav>
+        <% end %>
 
-          </div>
-        </nav>
       </div>
     </article>
   </div>
